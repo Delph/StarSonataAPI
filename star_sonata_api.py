@@ -207,7 +207,7 @@ class StarSonataAPI():
 
   def disconnect(self):
     self.socket.close()
-    self.socet = None
+    self.socket = None
 
   async def __ping(self, message):
     (sec, usec) = struct.unpack('<ii', message.payload)
