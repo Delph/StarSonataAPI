@@ -258,7 +258,7 @@ class StarSonataAPI():
       name += chr(data[offset])
       offset += 1
     offset += 1
-    (rank, lastOn) = struct.unpack('<hi', data[offset:])
+    (rank, lastOn) = struct.unpack('<hi', data[offset:offset+6])
     if self.team:
       member = next((m for m in self.team.members if m['persona'] == persona), None)
       if member:
