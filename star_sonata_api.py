@@ -11,7 +11,7 @@ class Account():
     self.password = password
     self.characters = []
 
-  def addCharacter(character):
+  def addCharacter(self, character):
     self.characters.append(character)
 
   def get_hash(self):
