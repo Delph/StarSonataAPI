@@ -179,7 +179,7 @@ class StarSonataAPI():
   def __init__(self):
     self.events = {}
 
-    self.socket = None
+    self.socket = Socket()
 
     self.account = None
     self.character = None
@@ -201,13 +201,12 @@ class StarSonataAPI():
     port = kwargs.get('port', self.PORT)
 
     print(f'Connecting to {host}:{port}')
-    self.socket = Socket()
     await self.socket.connect(host, port)
     return self.socket
 
   def disconnect(self):
     self.socket.close()
-    self.socket = None
+    self.socket = Socket()
 
   async def __ping(self, message):
     (sec, usec) = struct.unpack('<ii', message.payload)
@@ -314,7 +313,7 @@ class StarSonataAPI():
         except ConnectionResetError:
           self.disconnect()
           await self._connect()
-        except asyncio.streams.IncompleteReadError:
+        except asyncio.IncompleteReadError:
             self.disconnect()
             await self._connect()
     except KeyboardInterrupt:
