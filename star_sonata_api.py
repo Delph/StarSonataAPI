@@ -33,11 +33,11 @@ class Account():
     password = self.password
     flags = 1
 
-    payload = struct.pack('<BBBBHi%ssB%ssBBHI' % (len(username.encode('utf-8')), len(password.encode('utf-8'))),
+    payload = struct.pack('<BBBBHi%ssB%ssBBHIH' % (len(username.encode('utf-8')), len(password.encode('utf-8'))),
       1, # uint8
       0, # uint8
       0, # uint8
-      0, # uint8
+      0, # id, uint8
       StarSonataAPI.VERSION, # (u)int16
       flags, # int32
       username.encode('utf-8'), # string
@@ -47,6 +47,7 @@ class Account():
       0, # uint8
       StarSonataAPI.SUBVERSION, # (u)int16
       self.get_hash(), # uint32
+      0, # beta version - uint16
     )
     m = Message()
     m.payload = payload
@@ -297,7 +298,8 @@ class StarSonataAPI():
             SC_TEAM: self.__team,
             SC_TEAMMEMBER: self.__team_member,
             SC_LOGINFAIL: self.__loginfail,
-            SC_UPDATECLIENT: self.__updateclient
+            SC_UPDATECLIENT: self.__updateclient,
+            SC_DISCONNECT: self.__disconnect
           }
 
           handled = False
@@ -309,7 +311,7 @@ class StarSonataAPI():
             handled = True
 
           if not handled:
-            print('Unknown message type: %s\n%s' % (message.type, ', '.join([str(b) for b in message.payload])))
+            print(f'Unknown message type: {message.type}\nPayload: {" ".join([str(b) for b in message.payload])}')
         except ConnectionResetError:
           self.disconnect()
           await self._connect()
